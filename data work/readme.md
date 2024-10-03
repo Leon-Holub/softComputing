@@ -1,4 +1,5 @@
 # Analýza dat herního prodeje (vgsales dataset)
+[GitHub odkaz](https://github.com/Leon-Holub/softComputing/tree/master/data%20work)
 
 Tento úkol se zaměřuje na analýzu datasetu herního prodeje pomocí Pythonu. Hlavním cílem bylo procvičit práci s daty a získat zajímavé poznatky z prodejních dat her na různých platformách. Každý úkol byl zpracován pomocí specifické funkce a výsledky jsou prezentovány níže, včetně vložených obrázků grafů.
 
