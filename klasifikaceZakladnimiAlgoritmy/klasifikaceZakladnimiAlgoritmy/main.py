@@ -31,13 +31,15 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import os
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
 
-def classify_weather_for_city(city_name=None):
+
+def classify_weather_for_city(city_name=None, save_graphs=False):
     # Načtení datasetu
     data = pd.read_csv('weatherAUS.csv')
 
@@ -47,7 +49,8 @@ def classify_weather_for_city(city_name=None):
 
     # Příprava datasetu
     # Výběr sloupců, které použijeme pro klasifikaci (např. 'MinTemp', 'MaxTemp', 'Rainfall', ...)
-    columns_to_use = ['MinTemp', 'MaxTemp', 'Rainfall', 'Humidity3pm', 'Humidity9am', 'Pressure9am', 'Pressure3pm', 'RainToday']
+    columns_to_use = ['MinTemp', 'MaxTemp', 'Rainfall', 'Humidity3pm', 'Humidity9am', 'Pressure9am', 'Pressure3pm',
+                      'RainToday']
     data = data[columns_to_use + ['RainTomorrow']]
 
     # Převod hodnot 'RainToday' na binární ('Yes' -> 1, 'No' -> 0)
@@ -75,14 +78,17 @@ def classify_weather_for_city(city_name=None):
     # Gaussian Naive Bayes Classifier
     gnb = GaussianNB()
     gnb_accuracies = cross_val_score(gnb, X, y, cv=skf, scoring='accuracy')
-    print(f'Gaussian Naive Bayes Classifier - průměrná přesnost pro {city_name if city_name else "všechna města"}: {gnb_accuracies.mean():.2f}')
+    print(
+        f'Gaussian Naive Bayes Classifier - průměrná přesnost pro {city_name if city_name else "všechna města"}: {gnb_accuracies.mean():.2f}')
 
     # k-Nearest Neighbours Classifier
     knn = KNeighborsClassifier(n_neighbors=5)
     knn_accuracies = cross_val_score(knn, X, y, cv=skf, scoring='accuracy')
-    print(f'k-Nearest Neighbours Classifier - průměrná přesnost pro {city_name if city_name else "všechna města"}: {knn_accuracies.mean():.2f}')
+    print(
+        f'k-Nearest Neighbours Classifier - průměrná přesnost pro {city_name if city_name else "všechna města"}: {knn_accuracies.mean():.2f}')
 
     # Confusion Matrix pro každý klasifikátor
+    iteration = 0
     for train_index, test_index in skf.split(X, y):
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
@@ -102,14 +108,20 @@ def classify_weather_for_city(city_name=None):
         # Vykreslení confusion matrix pro lepší přehled
         plt.figure(figsize=(10, 4))
         plt.subplot(1, 2, 1)
-        sns.heatmap(cm_gnb, annot=True, fmt='d', cmap='Blues')
+        sns.heatmap(cm_gnb, annot=True, fmt='d', cmap='Blues', xticklabels=['No (Predicted)', 'Yes (Predicted)'], yticklabels=['No (True)', 'Yes (True)'])
         plt.title(f'Confusion Matrix - Gaussian Naive Bayes - {city_name if city_name else "všechna města"}')
         plt.subplot(1, 2, 2)
-        sns.heatmap(cm_knn, annot=True, fmt='d', cmap='Greens')
+        sns.heatmap(cm_knn, annot=True, fmt='d', cmap='Greens', xticklabels=['No (Predicted)', 'Yes (Predicted)'], yticklabels=['No (True)', 'Yes (True)'])
         plt.title(f'Confusion Matrix - k-Nearest Neighbours - {city_name if city_name else "všechna města"}')
-        plt.show()
+        if save_graphs:
+            directory = f'graphs/{city_name if city_name else "all_cities"}'
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            plt.savefig(
+                f'{directory}/confusion_matrix_{city_name if city_name else "all_cities"}_iteration_{iteration}.png')
+        else:
+            plt.show()
+        iteration += 1
 
-
-# Příklad použití
-classify_weather_for_city('Albury')
-classify_weather_for_city()
+classify_weather_for_city('Albury', save_graphs=True)
+classify_weather_for_city(save_graphs=True)
