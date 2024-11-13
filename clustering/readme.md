@@ -48,7 +48,7 @@ Pro algoritmus DBSCAN jsme nemuseli předem stanovovat počet clusterů. Namíst
 
 Výsledky DBSCAN clusteringu ukázaly, že algoritmus nalezl sedm clusterů a také odhalil šum (outliers). Na obrázku níže jsou jednotlivé clustery vizualizovány a popsány, například "Balanced Spenders & Savers", "Heavy Spenders" nebo "Cash Advance Users".
 
-![DBSCAN Clustering](dbscan_0.37469118099227106.png)
+![DBSCAN Clustering](dbscan.png)
 
 Charakteristika DBSCAN clusterů:
 
