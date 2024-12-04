@@ -1,4 +1,4 @@
-# Protokol: Redukce dimenzionality MNIST a klasifikace kNN
+# Redukce dimenzionality MNIST a klasifikace kNN
 
 ## Výsledky
 V tomto úkolu jsme použili dvě metody redukce dimenzionality, **PCA** a **t-SNE**, pro vizualizaci datasetu MNIST a následně jsme porovnali jejich vliv na klasifikaci pomocí kNN.
